@@ -1,11 +1,11 @@
 name: Deployment pipeline
 
 on:
-  push: 
-    branches: 
+  push:
+    branches:
       - main
 
-  pull_request: 
+  pull_request:
     branches: [main]
     types: [opened, synchronize]
 
@@ -25,7 +25,7 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Check style        
+      - name: Check style
         run: npm run eslint
 
       - run: npm test
@@ -46,4 +46,5 @@ jobs:
           retention-days: 5
 
       - name: Trigger deployment
+        if: ${{github.event_name == 'push'}}
         run: curl ${{ secrets.RENDER_DEPLOY_HOOK }}
