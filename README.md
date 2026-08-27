@@ -4,7 +4,7 @@ This repository is used for the CI/CD module of the Full Stack Open course.
 
 ## Commands
 
-Start by running `npm install` inside the project folder
+Start by running `npm install` inside the project folder.
 
 `npm start` to run the webpack dev server.
 `npm test` to run tests.
@@ -13,4 +13,5 @@ Start by running `npm install` inside the project folder
 `npm run start-prod` to run your production build.
 
 ## Link of the Deployed App
+
 https://part11-g6fq.onrender.com/
