@@ -97,5 +97,5 @@ jobs:
           COMMIT_MESSAGES: ${{ toJson(github.event.commits.*.message) }}
         run: echo "$COMMIT_MESSAGES"
       - name: Does the commit contain '#skip'
-        if: ${{!contains(env.COMMITS, '#skip')}}
-        run: echo "This commit doesn't contain '#skip'"
+        if: ${{contains(env.COMMITS, '#skip')}}
+        run: echo "This commit does contain '#skip'"
