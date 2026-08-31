@@ -73,6 +73,9 @@ on:
 
 jobs:
   a_test_job:
+    env:
+      COMMITS: ${{ toJson(github.event.commits) }}
+
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -87,11 +90,12 @@ jobs:
         run: echo "$GITHUB_EVENT"
 
       - name: commits (github.event.commits)
-        env:
-          COMMITS: ${{ toJson(github.event.commits) }}
         run: echo "$COMMITS"
 
       - name: commit messages
         env:
           COMMIT_MESSAGES: ${{ toJson(github.event.commits.*.message) }}
         run: echo "$COMMIT_MESSAGES"
+      - name: Does the commit contain '#skip'
+        if: ${{!contains(env.COMMITS, '#skip')}}
+        run: echo "This commit doesn't contain '#skip'"
