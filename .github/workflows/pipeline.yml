@@ -31,7 +31,15 @@ jobs:
 
       - run: npm run build
 
-      - name: Install Playwright Browsers
+      - name: Cache Playwright browsers
+        id: playwright-cache
+        uses: actions/cache@v6
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-chromium-${{ hashFiles('**/package-lock.json') }}
+
+      - name: Install Playwright Chromium
+        if: steps.playwright-cache.outputs.cache-hit != 'true'
         run: npx playwright install --with-deps chromium
 
       - name: Run Playwright tests
@@ -46,7 +54,7 @@ jobs:
 
       - name: Trigger deployment
         if: github.event_name == 'push'
-        run: curl ${{ secrets.RENDER_DEPLOY_HOOK }}
+        run: curl -f ${{ secrets.RENDER_DEPLOY_HOOK }}
 
   tag_release:
     runs-on: ubuntu-latest
@@ -58,7 +66,7 @@ jobs:
       !contains(toJson(github.event.commits.*.message), '#skip')
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           fetch-depth: '0'
 
@@ -81,7 +89,7 @@ jobs:
         with:
           webhook: ${{ secrets.DISCORD_WEBHOOK }}
           nodetail: true
-          title: '## Deployment successful'
+          title: 'Deployment successful'
           content: '✅ **Deployment Successful!** A new version deployed to production'
           description: |
             **Repository:** ${{github.event.repository.full_name}}
@@ -98,7 +106,7 @@ jobs:
         with:
           webhook: ${{ secrets.DISCORD_WEBHOOK }}
           nodetail: true
-          title: '## Deployment failed'
+          title: 'Deployment failed'
           content: '❌ **Build Failed!** The pipeline encountered an error'
           description: |
             **Commit:** ${{github.event.head_commit.id}}
