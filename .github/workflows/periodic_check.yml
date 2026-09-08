@@ -1,0 +1,13 @@
+name: Periodic Health Check
+
+on: 
+  workflow_dispatch: 
+  schedule:
+  # at tue, september, 8th, at 9am every 2 minutes from minutes 24 to 28
+    - cron: '22-28/2 9 8 9 3'
+
+jobs:
+  health_check:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo 'Hello'
